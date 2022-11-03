@@ -20,10 +20,10 @@ class ApiResponse {
         return this;
     }
 
-    badRequest() {
+    badRequest(reason) {
         this.#done = false;
         this.#code = StatusCodes.BAD_REQUEST;
-        this.#result = ReasonPhrases.BAD_REQUEST;
+        this.#result = reason ?? ReasonPhrases.BAD_REQUEST;
         return this;
     }
 
@@ -37,7 +37,7 @@ class ApiResponse {
     error(detail) {
         this.#done = false;
         this.#code = StatusCodes.INTERNAL_SERVER_ERROR;
-        this.#result = detail || ReasonPhrases.INTERNAL_SERVER_ERROR;
+        this.#result = detail ?? ReasonPhrases.INTERNAL_SERVER_ERROR;
         return this;
     }
 
@@ -53,6 +53,10 @@ class ApiResponse {
             "done": this.#done,
             "result": this.#result?? null
         }
+    }
+
+    sendResult() {
+        this.#response?.json( this.#result );
     }
 
     send() {
