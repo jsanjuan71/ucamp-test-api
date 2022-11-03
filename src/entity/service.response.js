@@ -1,19 +1,16 @@
 class ServiceResponse {
 
     #done = null;
-    #code = null;
     #result = null;
 
-    error(detail, code = "001") {
+    error(detail) {
         this.#done = false;
-        this.#code = code;
         this.#result = detail ?? code;
         return this;
     }
 
     success(data) {
         this.#done = true;
-        this.#code = "000";
         this.#result = data ?? code;
         return this;
     }
@@ -27,6 +24,10 @@ class ServiceResponse {
 
     build() {
         return this.#toJson()
+    }
+
+    buildAsResult() {
+        return this.#result;
     }
 }
 module.exports = ServiceResponse;
