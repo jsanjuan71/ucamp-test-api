@@ -4,6 +4,7 @@ const axios = require('axios')
 const ServiceResponse = require('../entity/service.response')
 const ProductMap = require('../entity/product.map')
 const CacheService = require('../service/cache.service')
+const PaginationTool = require('../tools/pagination.tool')
 
 /**
  * Service to manage products operations
@@ -15,7 +16,7 @@ class ProductsService {
      * @param {string} keyword 
      * @returns {[ProductMap]} 
      */
-    async search(keyword) {
+    async search(keyword, pagination) {
         const response = new ServiceResponse();
         try {
             const result = [];
@@ -29,7 +30,9 @@ class ProductsService {
                 products = CacheService.get(keyword);
             }
 
-            for (const prod of products) {
+            let pagedProducts = PaginationTool.applyPagination(products, pagination.page, pagination.size);
+
+            for (const prod of pagedProducts) {
                 const productMap = new ProductMap();
                 productMap
                     .setId( prod.id )
